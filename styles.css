@@ -14,7 +14,7 @@
 html{scroll-behavior:smooth;background:var(--bg)}
 body{
   margin:0;color:var(--fg);font-family:var(--body);line-height:1.55;background:var(--bg);
-  overflow-x:hidden;opacity:0;transition:opacity .28s ease;
+  overflow-x:hidden;
 }
 body.is-ready{opacity:1}
 body::before{
@@ -51,7 +51,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{
   position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:var(--bg);
   overflow:hidden;transition:opacity .58s var(--ease),visibility .58s var(--ease);
 }
-.brand-intro__mark{width:124px;height:124px;opacity:0;object-fit:contain;transition:opacity .42s ease}
+.brand-intro__mark{width:124px;height:124px;opacity:1;object-fit:contain}
 .brand-intro__signal{display:none}
 body.intro-play .brand-intro__mark{opacity:1}
 body.intro-play .brand-intro__signal{display:none}
