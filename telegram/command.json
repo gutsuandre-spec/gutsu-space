@@ -2,10 +2,6 @@
   "operation": "batch",
   "commands": [
     {
-      "operation": "set_description",
-      "description": "Техника и AI для бизнеса.\nПоставки профессионального оборудования / автоматизация / рабочие инструменты.\nАндрей Гуцу · gutsu.space"
-    },
-    {
       "operation": "set_reactions",
       "emojis": [
         "👍",
