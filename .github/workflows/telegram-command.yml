@@ -21,7 +21,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
           python3 - <<'PY'
-          import json, os, sys, urllib.request, urllib.error
+          import json, os, urllib.request, urllib.error, uuid, pathlib, subprocess, shutil
 
           token = os.environ.get("TELEGRAM_BOT_TOKEN")
           if not token:
@@ -32,69 +32,103 @@ jobs:
 
           op = cmd.get("operation")
           chat_id = "@gutsuspace"
-          allowed = {"send", "edit", "delete", "pin", "send_photo"}
+          allowed = {"send", "edit", "delete", "pin", "send_photo", "set_avatar"}
           if op not in allowed:
               raise SystemExit(f"Unsupported operation: {op}")
 
-          if op == "send":
-              method = "sendMessage"
-              payload = {
+          def post_json(method, payload):
+              data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+              req = urllib.request.Request(
+                  f"https://api.telegram.org/bot{token}/{method}",
+                  data=data,
+                  headers={"Content-Type": "application/json"},
+                  method="POST",
+              )
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as resp:
+                      result = json.loads(resp.read().decode("utf-8"))
+              except urllib.error.HTTPError as e:
+                  body = e.read().decode("utf-8", errors="replace")
+                  raise SystemExit(f"Telegram API error {e.code}: {body}")
+              if not result.get("ok"):
+                  raise SystemExit(f"Telegram API returned error: {result}")
+              return result
+
+          def set_avatar():
+              svg = pathlib.Path("assets/gutsu-avatar.svg")
+              png = pathlib.Path("/tmp/gutsu-avatar.png")
+              converter = shutil.which("convert")
+              if converter:
+                  subprocess.run([converter, "-background", "none", str(svg), "-resize", "1024x1024", str(png)], check=True)
+              elif shutil.which("magick"):
+                  subprocess.run(["magick", str(svg), "-resize", "1024x1024", str(png)], check=True)
+              else:
+                  subprocess.run(["sudo", "apt-get", "update", "-qq"], check=True)
+                  subprocess.run(["sudo", "apt-get", "install", "-y", "-qq", "librsvg2-bin"], check=True)
+                  subprocess.run(["rsvg-convert", "-w", "1024", "-h", "1024", "-o", str(png), str(svg)], check=True)
+
+              boundary = "----GUTSU" + uuid.uuid4().hex
+              parts = []
+              def field(name, value):
+                  parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"{name}\"\r\n\r\n{value}\r\n".encode())
+              field("chat_id", chat_id)
+              parts.append(
+                  f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"gutsu-avatar.png\"\r\nContent-Type: image/png\r\n\r\n".encode()
+                  + png.read_bytes() + b"\r\n"
+              )
+              parts.append(f"--{boundary}--\r\n".encode())
+              body = b"".join(parts)
+              req = urllib.request.Request(
+                  f"https://api.telegram.org/bot{token}/setChatPhoto",
+                  data=body,
+                  headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+                  method="POST",
+              )
+              try:
+                  with urllib.request.urlopen(req, timeout=60) as resp:
+                      result = json.loads(resp.read().decode("utf-8"))
+              except urllib.error.HTTPError as e:
+                  err = e.read().decode("utf-8", errors="replace")
+                  raise SystemExit(f"Telegram avatar error {e.code}: {err}")
+              if not result.get("ok"):
+                  raise SystemExit(f"Telegram avatar error: {result}")
+              return result
+
+          if op == "set_avatar":
+              result = set_avatar()
+          elif op == "send":
+              result = post_json("sendMessage", {
                   "chat_id": chat_id,
                   "text": cmd["text"],
                   "parse_mode": cmd.get("parse_mode", "HTML"),
                   "disable_web_page_preview": bool(cmd.get("disable_web_page_preview", True)),
-              }
+              })
           elif op == "edit":
-              method = "editMessageText"
-              payload = {
+              result = post_json("editMessageText", {
                   "chat_id": chat_id,
                   "message_id": int(cmd["message_id"]),
                   "text": cmd["text"],
                   "parse_mode": cmd.get("parse_mode", "HTML"),
                   "disable_web_page_preview": bool(cmd.get("disable_web_page_preview", True)),
-              }
+              })
           elif op == "delete":
-              method = "deleteMessage"
-              payload = {
-                  "chat_id": chat_id,
-                  "message_id": int(cmd["message_id"]),
-              }
+              result = post_json("deleteMessage", {"chat_id": chat_id, "message_id": int(cmd["message_id"])})
           elif op == "pin":
-              method = "pinChatMessage"
-              payload = {
+              result = post_json("pinChatMessage", {
                   "chat_id": chat_id,
                   "message_id": int(cmd["message_id"]),
                   "disable_notification": bool(cmd.get("disable_notification", True)),
-              }
+              })
           else:
-              method = "sendPhoto"
-              payload = {
+              result = post_json("sendPhoto", {
                   "chat_id": chat_id,
                   "photo": cmd["photo_url"],
                   "caption": cmd.get("caption", ""),
                   "parse_mode": cmd.get("parse_mode", "HTML"),
-              }
-
-          data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-          req = urllib.request.Request(
-              f"https://api.telegram.org/bot{token}/{method}",
-              data=data,
-              headers={"Content-Type": "application/json"},
-              method="POST",
-          )
-          try:
-              with urllib.request.urlopen(req, timeout=30) as resp:
-                  result = json.loads(resp.read().decode("utf-8"))
-          except urllib.error.HTTPError as e:
-              body = e.read().decode("utf-8", errors="replace")
-              raise SystemExit(f"Telegram API error {e.code}: {body}")
-
-          if not result.get("ok"):
-              raise SystemExit(f"Telegram API returned error: {result}")
+              })
 
           out = {"operation": op, "ok": True}
-          if isinstance(result.get("result"), dict):
-              if "message_id" in result["result"]:
-                  out["message_id"] = result["result"]["message_id"]
+          if isinstance(result.get("result"), dict) and "message_id" in result["result"]:
+              out["message_id"] = result["result"]["message_id"]
           print(json.dumps(out, ensure_ascii=False))
           PY
