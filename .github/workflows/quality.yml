@@ -44,8 +44,16 @@ jobs:
             exit 0
           fi
           mkdir -p qa-screens
-          "$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars --window-size=360,1200 --screenshot=qa-screens/home-360.png http://127.0.0.1:4173/
-          "$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars --window-size=1440,1400 --screenshot=qa-screens/home-1440.png http://127.0.0.1:4173/
+          "$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars --virtual-time-budget=1800 --window-size=360,1200 --screenshot=qa-screens/home-360.png http://127.0.0.1:4173/
+          "$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars --virtual-time-budget=1800 --window-size=1440,1400 --screenshot=qa-screens/home-1440.png http://127.0.0.1:4173/
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          if-no-files-found: ignore
 
       - name: Upload screenshots
         if: always()
