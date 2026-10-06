@@ -317,17 +317,19 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .manifesto{padding:72px 0}.manifesto-grid{gap:28px}
   .principle{grid-template-columns:44px 1fr}.principle p{grid-column:2}
   .inner-hero{padding:68px 0 70px}.visual-panel{min-height:390px}
-  .data-stack{width:84%;max-width:380px}
+  .data-stack{width:86%;max-width:380px}
   .data-row{
-    grid-template-columns:68px minmax(0,1fr) 82px;
-    column-gap:10px;
-    min-height:84px;
-    padding:13px 14px;
-    font-size:.56rem;
-    letter-spacing:.045em;
+    grid-template-columns:72px minmax(0,1fr);
+    column-gap:14px;
+    row-gap:8px;
+    min-height:94px;
+    padding:16px 18px;
+    font-size:.58rem;
+    letter-spacing:.04em;
   }
-  .data-row strong{justify-self:start}
-  .status{font-size:.53rem;gap:6px}
+  .data-row strong{grid-row:1 / span 2;align-self:center;justify-self:start}
+  .data-row>span:not(.status){grid-column:2;grid-row:1;align-self:end;text-align:left;white-space:normal;overflow-wrap:anywhere}
+  .status{grid-column:2;grid-row:2;justify-self:start;align-self:start;font-size:.54rem;gap:6px;white-space:normal}
   .status::before{width:5px;height:5px;flex-basis:5px}
   .section{padding:74px 0}
   .cta{margin:72px 0 54px;padding:32px 24px}
@@ -341,16 +343,19 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .signal-stage__content{padding:22px}
   .direction-card h3{font-size:2.45rem}
   .wordmark-standalone{font-size:.82rem}
-  .data-stack{width:90%;max-width:340px}
+  .data-stack{width:88%;max-width:330px}
   .data-row{
-    grid-template-columns:58px minmax(0,1fr) 72px;
-    column-gap:8px;
-    min-height:78px;
-    padding:12px;
-    font-size:.52rem;
-    letter-spacing:.035em;
+    grid-template-columns:62px minmax(0,1fr);
+    column-gap:12px;
+    row-gap:7px;
+    min-height:92px;
+    padding:14px 16px;
+    font-size:.54rem;
+    letter-spacing:.03em;
   }
-  .status{font-size:.5rem;gap:5px}
+  .data-row strong{grid-row:1 / span 2;align-self:center}
+  .data-row>span:not(.status){grid-column:2;grid-row:1;text-align:left;white-space:normal;overflow-wrap:anywhere}
+  .status{grid-column:2;grid-row:2;justify-self:start;font-size:.5rem;gap:5px;white-space:normal}
 }
 
 /* Reduced motion */
