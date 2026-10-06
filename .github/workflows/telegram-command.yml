@@ -32,7 +32,7 @@ jobs:
 
           op = cmd.get("operation")
           chat_id = "@gutsuspace"
-          allowed = {"send", "edit", "delete", "pin", "send_photo", "set_avatar", "inspect"}
+          allowed = {"send", "edit", "delete", "pin", "send_photo", "set_avatar", "inspect", "set_description", "set_reactions"}
           if op not in allowed:
               raise SystemExit(f"Unsupported operation: {op}")
 
@@ -94,7 +94,19 @@ jobs:
                   raise SystemExit(f"Telegram avatar error: {result}")
               return result
 
-          if op == "inspect":
+          if op == "set_description":
+              result = post_json("setChatDescription", {
+                  "chat_id": chat_id,
+                  "description": cmd["description"],
+              })
+          elif op == "set_reactions":
+              result = post_json("setChatAvailableReactions", {
+                  "chat_id": chat_id,
+                  "available_reactions": [
+                      {"type": "emoji", "emoji": e} for e in cmd.get("emojis", ["👍","🔥","💡"])
+                  ],
+              })
+          elif op == "inspect":
               chat = post_json("getChat", {"chat_id": chat_id})
               count = post_json("getChatMemberCount", {"chat_id": chat_id})
               info = {"chat": chat.get("result", {}), "member_count": count.get("result")}
