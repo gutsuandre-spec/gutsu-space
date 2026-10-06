@@ -6,7 +6,8 @@
   const intro = document.querySelector('.brand-intro');
   if (intro) {
     const seen = sessionStorage.getItem('gutsuIntroSeen');
-    if (seen || reduced) {
+    const compactViewport = window.matchMedia('(max-width: 700px)').matches;
+    if (seen || reduced || compactViewport) {
       intro.remove();
       document.body.classList.add('is-ready');
     } else {
@@ -71,6 +72,19 @@
         card.style.setProperty('--rx', '0deg');
         card.style.setProperty('--ry', '0deg');
       });
+    });
+  }
+
+
+  // Ticker pause control. Hover/focus also pauses via CSS.
+  const ticker = document.querySelector('.ticker');
+  const tickerToggle = document.querySelector('.ticker-toggle');
+  if (ticker && tickerToggle) {
+    tickerToggle.addEventListener('click', () => {
+      const paused = ticker.classList.toggle('is-paused');
+      tickerToggle.setAttribute('aria-pressed', String(paused));
+      tickerToggle.setAttribute('aria-label', paused ? 'Продолжить бегущую строку' : 'Поставить бегущую строку на паузу');
+      tickerToggle.textContent = paused ? 'Продолжить' : 'Пауза';
     });
   }
 

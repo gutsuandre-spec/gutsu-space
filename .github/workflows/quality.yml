@@ -1,0 +1,69 @@
+name: Homepage Quality
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "script.js"
+      - "assets/**"
+      - ".lighthouserc.json"
+      - ".github/workflows/quality.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homepage-quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/gutsu-server.log 2>&1 &
+          echo $! > /tmp/gutsu-server.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4173/ > /dev/null
+
+      - name: Lighthouse collect
+        run: npx --yes @lhci/cli@0.14.0 collect --config=.lighthouserc.json
+
+      - name: Lighthouse assertions
+        run: npx --yes @lhci/cli@0.14.0 assert --config=.lighthouserc.json
+
+      - name: Capture responsive screenshots
+        if: always()
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME" ]; then
+            echo "Chrome binary not found; skipping screenshots."
+            exit 0
+          fi
+          mkdir -p qa-screens
+          "$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars --virtual-time-budget=1800 --window-size=360,1200 --screenshot=qa-screens/home-360.png http://127.0.0.1:4173/
+          "$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars --virtual-time-budget=1800 --window-size=1440,1400 --screenshot=qa-screens/home-1440.png http://127.0.0.1:4173/
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          if-no-files-found: ignore
+          include-hidden-files: true
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: homepage-responsive-screens
+          path: qa-screens/
+          if-no-files-found: ignore

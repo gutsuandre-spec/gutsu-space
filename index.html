@@ -8,26 +8,38 @@
   <link rel="icon" type="image/svg+xml" href="assets/gutsu-symbol.svg">
   <link rel="apple-touch-icon" href="assets/gutsu-symbol.svg">
   <meta name="theme-color" content="#0B0D10">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"></noscript>
   <link rel="canonical" href="https://gutsu.space/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="GUTSU">
   <meta property="og:title" content="GUTSU — Equipment & AI">
   <meta property="og:description" content="GUTSU — B2B-поставка профессионального оборудования для съёмки и продакшна, а также AI-автоматизация и разработка для бизнеса.">
   <meta property="og:url" content="https://gutsu.space/">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://gutsu.space/assets/og-gutsu.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="GUTSU — Equipment & AI">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://gutsu.space/assets/og-gutsu.svg">
   <meta name="twitter:title" content="GUTSU — Equipment & AI">
   <meta name="twitter:description" content="GUTSU — B2B-поставка профессионального оборудования для съёмки и продакшна, а также AI-автоматизация и разработка для бизнеса.">
   <script type="application/ld+json" id="gutsu-schema">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://gutsu.space/#website","url":"https://gutsu.space/","name":"GUTSU","inLanguage":"ru-RU"},{"@type":"Organization","@id":"https://gutsu.space/#organization","name":"GUTSU","url":"https://gutsu.space/","founder":{"@type":"Person","name":"Андрей Гуцу"},"sameAs":["https://t.me/gutsuspace"]}]}</script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Перейти к содержимому</a>
   <div class="brand-intro" aria-hidden="true">
     <img class="brand-intro__mark" src="assets/gutsu-symbol.svg" alt="">
   </div>
   <div class="signal-progress" aria-hidden="true"><i class="signal-progress__dot"></i></div>
 
-  <main class="wrap">
-    <nav class="nav">
+  <header class="site-header">
+    <div class="wrap">
+    <nav class="nav home-nav" aria-label="Основная навигация">
       <a class="asset-lockup" href="./" aria-label="GUTSU SPACE"><img class="brand-lockup-image" src="assets/gutsu-lockup-horizontal.svg" alt="GUTSU SPACE"></a>
       <div class="nav-contact">
         <a class="mail" href="equipment/">EQUIPMENT</a>
@@ -35,7 +47,10 @@
         <a class="mail" href="https://t.me/gutsuspace" target="_blank" rel="noopener">@gutsuspace</a>
       </div>
     </nav>
+    </div>
+  </header>
 
+  <main id="main-content" class="wrap" tabindex="-1">
     <section class="home-hero">
       <div data-reveal>
         <div class="kicker-row">
@@ -54,8 +69,8 @@
     <section class="signal-stage" data-stage data-active="equipment" data-reveal>
       <div class="signal-stage__content">
         <div class="stage-tabs" aria-label="Направления GUTSU">
-          <button class="stage-tab" type="button" data-stage-target="equipment" aria-pressed="true">01 / EQUIPMENT</button>
-          <button class="stage-tab" type="button" data-stage-target="ai" aria-pressed="false">02 / AI</button>
+          <button class="stage-tab stage-tab--equipment" type="button" data-stage-target="equipment" aria-pressed="true">01 / EQUIPMENT</button>
+          <button class="stage-tab stage-tab--ai" type="button" data-stage-target="ai" aria-pressed="false">02 / AI</button>
         </div>
 
         <div class="stage-copy" data-panel="equipment">
@@ -81,36 +96,62 @@
         <span class="section-index">01 / 02</span>
       </div>
       <div class="grid2" style="margin-top:26px">
-        <a class="direction-card" data-tilt data-reveal href="equipment/">
-          <div class="card-top"><span class="card-glyph">01</span><span class="section-index">SUPPLY</span></div>
+        <article class="direction-card direction-card--equipment" data-tilt data-reveal>
+          <div class="card-top">
+            <span class="direction-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" role="img"><path d="M5 10.5h5l2-3h8l2 3h5v14H5zM16 13a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>
+            </span>
+            <span class="section-index">01 / SUPPLY</span>
+          </div>
           <div>
             <p class="eyebrow">GUTSU / EQUIPMENT</p>
             <h3>Профессиональная техника для съёмки и продакшна.</h3>
             <p>Свет, камеры, оптика, звук, риги, мониторы и wireless. Расчёт по ТЗ, фактическому наличию и B2B-цене.</p>
           </div>
-          <div class="card-footer"><span>Открыть направление</span><span>↗</span></div>
-          <span class="card-watermark">E</span>
-        </a>
+          <dl class="direction-details">
+            <div><dt>Что входит</dt><dd>Свет · камеры · оптика · звук · риги · мониторы · wireless</dd></div>
+            <div><dt>Для кого</dt><dd>Продакшны · студии · ренталы · корпоративные video-команды</dd></div>
+            <div><dt>Как считаем</dt><dd>ТЗ → наличие → коммерческая цена → альтернативы</dd></div>
+          </dl>
+        </article>
 
-        <a class="direction-card" data-tilt data-reveal data-delay="1" href="ai/">
-          <div class="card-top"><span class="card-glyph">02</span><span class="section-index">AUTOMATION</span></div>
+        <article class="direction-card direction-card--ai" data-tilt data-reveal data-delay="1">
+          <div class="card-top">
+            <span class="direction-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" role="img"><circle cx="7" cy="16" r="3"/><circle cx="16" cy="8" r="3"/><circle cx="25" cy="16" r="3"/><circle cx="16" cy="24" r="3"/><path d="M9.5 14.2 13.5 9.8M18.5 9.8l4 4.4M22.5 17.8l-4 4.4M13.5 22.2l-4-4.4"/></svg>
+            </span>
+            <span class="section-index">02 / AUTOMATION</span>
+          </div>
           <div>
             <p class="eyebrow">GUTSU / AI</p>
             <h3>AI, автоматизация и разработка под бизнес-задачу.</h3>
             <p>Агенты, боты, интеграции, аналитика и небольшие приложения. Фокус — на измеримом эффекте, а не на демонстрации технологии.</p>
           </div>
-          <div class="card-footer"><span>Открыть направление</span><span>↗</span></div>
-          <span class="card-watermark">A</span>
-        </a>
+          <dl class="direction-details">
+            <div><dt>Что входит</dt><dd>Агенты · боты · интеграции · аналитика · внутренние приложения</dd></div>
+            <div><dt>Для кого</dt><dd>Продажи · операции · поддержка · внутренние команды</dd></div>
+            <div><dt>Как считаем</dt><dd>Процесс → прототип → интеграция → измеримый эффект</dd></div>
+          </dl>
+        </article>
       </div>
     </section>
 
-    <div class="ticker" aria-hidden="true">
-      <div class="ticker-track">
-        <span>APUTURE / AMARAN</span><span>BLACKMAGIC DESIGN</span><span>DJI</span><span>SMALLRIG / TILTA</span><span>SONY</span><span>AI AGENTS</span><span>AUTOMATION</span><span>INTEGRATIONS</span>
-        <span>APUTURE / AMARAN</span><span>BLACKMAGIC DESIGN</span><span>DJI</span><span>SMALLRIG / TILTA</span><span>SONY</span><span>AI AGENTS</span><span>AUTOMATION</span><span>INTEGRATIONS</span>
+    <section class="ticker" aria-label="Бренды и технологии">
+      <div class="ticker-head">
+        <span class="eyebrow">BRANDS / TECHNOLOGY</span>
+        <button class="ticker-toggle" type="button" aria-pressed="false" aria-label="Поставить бегущую строку на паузу">Пауза</button>
       </div>
-    </div>
+      <div class="ticker-window">
+        <div class="ticker-track">
+          <div class="ticker-set" role="list">
+            <span role="listitem">APUTURE / AMARAN</span><span role="listitem">BLACKMAGIC DESIGN</span><span role="listitem">DJI</span><span role="listitem">SMALLRIG / TILTA</span><span role="listitem">SONY</span><span role="listitem">AI AGENTS</span><span role="listitem">AUTOMATION</span><span role="listitem">INTEGRATIONS</span>
+          </div>
+          <div class="ticker-set" aria-hidden="true">
+            <span>APUTURE / AMARAN</span><span>BLACKMAGIC DESIGN</span><span>DJI</span><span>SMALLRIG / TILTA</span><span>SONY</span><span>AI AGENTS</span><span>AUTOMATION</span><span>INTEGRATIONS</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="manifesto">
       <div class="manifesto-grid">
@@ -140,14 +181,15 @@
       </div>
     </section>
 
-    <footer class="footer">
+  </main>
+
+  <footer class="footer wrap">
       <div class="footer-brand">
         <img class="brand-wordmark-image" src="assets/gutsu-wordmark.svg" alt="GUTSU SPACE">
         <span>Андрей Гуцу</span>
       </div>
       <div>Equipment / AI<br><a href="https://t.me/gutsuspace" target="_blank" rel="noopener">@gutsuspace</a> · gutsu.space</div>
     </footer>
-  </main>
   <script src="script.js"></script>
 </body>
 </html>
