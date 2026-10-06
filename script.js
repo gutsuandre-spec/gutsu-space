@@ -6,7 +6,8 @@
   const intro = document.querySelector('.brand-intro');
   if (intro) {
     const seen = sessionStorage.getItem('gutsuIntroSeen');
-    if (seen || reduced) {
+    const compactViewport = window.matchMedia('(max-width: 700px)').matches;
+    if (seen || reduced || compactViewport) {
       intro.remove();
       document.body.classList.add('is-ready');
     } else {
