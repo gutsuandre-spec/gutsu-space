@@ -161,7 +161,9 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   appearance:none;border:1px solid var(--line);background:rgba(11,13,16,.4);color:var(--muted);border-radius:999px;
   min-height:44px;padding:10px 14px;font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;cursor:pointer;transition:.25s var(--ease);
 }
-.stage-tab:hover,.stage-tab[aria-pressed="true"]{color:var(--fg);border-color:rgba(239,75,69,.5);background:rgba(239,75,69,.08)}
+.stage-tab:hover{color:var(--fg)}
+.stage-tab--equipment[aria-pressed="true"]{color:var(--fg);border-color:var(--accent-equipment);background:rgba(239,75,69,.08)}
+.stage-tab--ai[aria-pressed="true"]{color:var(--fg);border-color:var(--accent-ai);background:rgba(139,175,255,.08)}
 .stage-copy{display:none;max-width:540px}
 .signal-stage[data-active="equipment"] .stage-copy[data-panel="equipment"],
 .signal-stage[data-active="ai"] .stage-copy[data-panel="ai"]{display:block;animation:stageIn .45s var(--ease) both}
@@ -169,29 +171,47 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
 .stage-copy p{max-width:520px;color:var(--muted);font-size:1.03rem}
 .stage-action{display:inline-flex;align-items:center;gap:14px;margin-top:18px;text-decoration:none;font-weight:600}
 .stage-action span{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);transition:.25s var(--ease)}
-.stage-action:hover span{transform:translateX(5px);border-color:var(--accent);color:var(--accent)}
+.stage-action:hover span{transform:translateX(5px)}
+.signal-stage[data-active="equipment"] .stage-action:hover span{border-color:var(--accent-equipment);color:var(--accent-equipment)}
+.signal-stage[data-active="ai"] .stage-action:hover span{border-color:var(--accent-ai);color:var(--accent-ai)}
+.signal-stage[data-active="equipment"] .stage-copy .eyebrow{color:var(--accent-equipment)}
+.signal-stage[data-active="ai"] .stage-copy .eyebrow{color:var(--accent-ai)}
 @keyframes stageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
 /* Direction cards */
 .directions{padding:0 0 112px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .direction-card{
-  --rx:0deg;--ry:0deg;position:relative;min-height:500px;padding:30px;display:flex;flex-direction:column;justify-content:space-between;
-  text-decoration:none;border:1px solid var(--line);border-radius:var(--radius-lg);background:rgba(16,21,26,.84);
-  transform:perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry));transition:transform .22s ease,border-color .3s ease,background .3s ease;overflow:hidden;
+  --rx:0deg;--ry:0deg;--direction-accent:var(--accent);
+  position:relative;min-height:560px;padding:30px;display:flex;flex-direction:column;justify-content:space-between;gap:32px;
+  border:1px solid var(--line);border-radius:var(--radius-lg);background:rgba(16,21,26,.84);
+  transform:perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition:transform .22s ease,border-color .3s ease,background .3s ease;overflow:hidden;
 }
+.direction-card--equipment{--direction-accent:var(--accent-equipment)}
+.direction-card--ai{--direction-accent:var(--accent-ai)}
 .direction-card::before{
   content:"";position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .35s ease;
-  background:radial-gradient(420px circle at var(--cx,50%) var(--cy,50%),rgba(239,75,69,.095),transparent 56%);
+  background:radial-gradient(420px circle at var(--cx,50%) var(--cy,50%),color-mix(in srgb,var(--direction-accent) 10%,transparent),transparent 56%);
 }
-.direction-card:hover{border-color:rgba(239,75,69,.5);background:#11171D}
+.direction-card::after{
+  content:"";position:absolute;left:30px;top:-1px;width:58px;height:2px;background:var(--direction-accent);
+}
+.direction-card:hover{border-color:var(--direction-accent);background:#11171D}
 .direction-card:hover::before{opacity:1}
+.direction-card .eyebrow{color:var(--direction-accent)}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:2}
-.card-glyph{width:54px;height:54px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;font-family:var(--mono);color:var(--accent);font-size:.8rem}
+.direction-icon{
+  width:48px;height:48px;border:1px solid color-mix(in srgb,var(--direction-accent) 55%,var(--line));
+  border-radius:50%;display:grid;place-items:center;color:var(--direction-accent)
+}
+.direction-icon svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .direction-card h3{position:relative;z-index:2;margin:0;max-width:560px;font-size:clamp(2.4rem,4vw,4rem);line-height:.96;font-weight:580}
 .direction-card p{position:relative;z-index:2;color:var(--muted);max-width:520px}
-.card-footer{position:relative;z-index:2;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;font-size:.88rem}
-.card-watermark{position:absolute;right:-6%;bottom:-12%;font-family:var(--brand);font-size:15rem;font-weight:700;color:rgba(244,243,240,.025);letter-spacing:-.08em}
+.direction-details{position:relative;z-index:2;margin:0;display:grid}
+.direction-details div{display:grid;grid-template-columns:120px 1fr;gap:18px;padding:14px 0;border-top:1px solid var(--line)}
+.direction-details dt{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--direction-accent)}
+.direction-details dd{margin:0;color:var(--muted-strong);font-size:.9rem;line-height:1.5}
 
 /* Manifesto */
 .manifesto{padding:108px 0;border-top:1px solid var(--line)}
@@ -363,7 +383,10 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .signal-stage__mark{right:7%;top:34%;width:min(46vw,190px);opacity:1!important}
   .stage-copy h2{font-size:clamp(2.7rem,11vw,4rem)}
   .grid2,.feature-grid,.process-grid{grid-template-columns:1fr}
-  .direction-card{min-height:430px;padding:24px}
+  .direction-card{min-height:0;padding:24px;gap:28px}
+  .direction-card::after{left:24px}
+  .direction-details div{grid-template-columns:1fr;gap:6px}
+  .direction-details dd{font-size:1rem}
   .manifesto{padding:72px 0}.manifesto-grid{gap:28px}
   .principle{grid-template-columns:44px 1fr}.principle p{grid-column:2}
   .inner-hero{padding:68px 0 70px}.visual-panel{min-height:390px}
