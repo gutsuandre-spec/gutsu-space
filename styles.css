@@ -319,3 +319,24 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   [data-reveal]{opacity:1!important;transform:none!important}
   body{opacity:1!important}
 }
+/* Editorial / SEO guides */
+.article-hero{padding:92px 0 64px;border-bottom:1px solid var(--line)}
+.article-hero h1{margin:16px 0 0;max-width:1040px;font-size:clamp(3.2rem,6.7vw,6.8rem);line-height:.92;font-weight:610}
+.article-hero .lead{max-width:820px}
+.article-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:28px;font-family:var(--mono);font-size:.64rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.article{display:grid;grid-template-columns:minmax(180px,.34fr) minmax(0,1fr);gap:70px;padding:82px 0 110px}
+.article-toc{position:sticky;top:24px;align-self:start;display:grid;gap:12px;font-family:var(--mono);font-size:.65rem;color:var(--muted)}
+.article-toc a{text-decoration:none}.article-toc a:hover{color:var(--fg)}
+.article-body{max-width:820px}
+.article-body h2{margin:72px 0 20px;font-size:clamp(2rem,3.8vw,3.6rem);line-height:1;font-weight:590}
+.article-body h2:first-child{margin-top:0}
+.article-body h3{margin:38px 0 14px;font-size:1.55rem;font-weight:570}
+.article-body p,.article-body li{color:#B1BAC1;font-size:1.02rem;line-height:1.8}
+.article-body strong{color:var(--fg)}
+.article-body ul,.article-body ol{padding-left:1.25rem}
+.article-callout{margin:34px 0;padding:24px;border-left:3px solid var(--accent);background:rgba(239,75,69,.055);color:#CAD0D5}
+.article-links{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:46px}
+.article-link{padding:22px;border:1px solid var(--line);border-radius:14px;text-decoration:none;background:rgba(16,21,26,.65)}
+.article-link span{display:block;font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.07em;text-transform:uppercase}
+.article-link strong{display:block;margin-top:9px;font-family:var(--display);font-size:1.3rem}
+@media(max-width:760px){.article{grid-template-columns:1fr;gap:34px;padding-top:54px}.article-toc{position:static;border-bottom:1px solid var(--line);padding-bottom:28px}.article-links{grid-template-columns:1fr}}
