@@ -121,10 +121,10 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   font-weight:700;letter-spacing:-.08em;color:rgba(244,243,240,.025);line-height:.8;pointer-events:none;
 }
 .signal-stage__mark{
-  position:absolute;right:7%;top:50%;width:min(35vw,410px);transform:translateY(-52%);
-  opacity:.95;transition:transform .7s var(--ease),opacity .45s ease;filter:drop-shadow(0 28px 90px rgba(0,0,0,.28));
+  position:absolute;right:9%;top:50%;width:min(18vw,245px);transform:translateY(-50%);
+  opacity:.96;transition:transform .7s var(--ease),opacity .45s ease;filter:drop-shadow(0 24px 70px rgba(0,0,0,.22));
 }
-.signal-stage[data-active="ai"] .signal-stage__mark{transform:translateY(-52%) rotate(-5deg) scale(.94);opacity:.72}
+.signal-stage[data-active="ai"] .signal-stage__mark{transform:translateY(-50%) scale(.92);opacity:.66}
 .signal-stage__content{position:relative;z-index:2;width:min(620px,58%);padding:54px;display:flex;min-height:620px;flex-direction:column;justify-content:space-between}
 .stage-tabs{display:flex;gap:8px;flex-wrap:wrap}
 .stage-tab{
@@ -274,7 +274,7 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .display-xl{font-size:clamp(3.8rem,11vw,7rem)}
   .signal-stage{min-height:560px}
   .signal-stage__content{width:65%;min-height:560px;padding:38px}
-  .signal-stage__mark{right:-3%;width:42vw}
+  .signal-stage__mark{right:7%;width:min(30vw,220px)}
   .manifesto-grid,.inner-hero-grid{grid-template-columns:1fr}
   .manifesto-grid{gap:34px}
   .visual-panel{min-height:460px}
@@ -291,7 +291,7 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .home-hero__meta{grid-template-columns:1fr}
   .signal-stage{margin:42px 0 72px;min-height:620px}
   .signal-stage__content{width:100%;min-height:620px;padding:26px}
-  .signal-stage__mark{right:-18%;top:38%;width:78vw;opacity:.23!important}
+  .signal-stage__mark{right:7%;top:34%;width:min(46vw,190px);opacity:.22!important}
   .stage-copy h2{font-size:clamp(2.7rem,11vw,4rem)}
   .grid2,.feature-grid,.process-grid{grid-template-columns:1fr}
   .direction-card{min-height:430px;padding:24px}
