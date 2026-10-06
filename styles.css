@@ -23,3 +23,7 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.04em}.hero h1{max-width:100
 .footer-brand{display:grid;gap:8px}
 @media(max-width:720px){.nav-contact .mail:last-child{display:none}.brand-mark{width:36px;height:36px}.brand-word,.brand-space{font-size:.9rem}.subbrand-lockup .brand-mark{width:34px;height:34px}.subbrand-copy{gap:6px}.subbrand-title{font-size:.78rem}.subbrand-direction{font-size:.64rem}}
 @media(max-width:480px){.brand-space{display:none}.nav-contact{gap:10px}.mail{font-size:.58rem}.subbrand-direction{max-width:110px;overflow:hidden;text-overflow:ellipsis}.wordmark-standalone{font-size:.82rem}}
+
+.cta-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn-secondary{display:inline-block;padding:14px 20px;border-radius:10px;border:1px solid rgba(11,13,16,.22);color:#0b0d10;text-decoration:none;font-weight:700;white-space:nowrap;background:transparent}
+@media(max-width:640px){.cta-actions{width:100%}.cta-actions .btn,.cta-actions .btn-secondary{width:100%;text-align:center}}
