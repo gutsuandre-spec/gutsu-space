@@ -21,20 +21,17 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
           python3 - <<'PY'
-          import json, os, urllib.request, urllib.error, uuid, pathlib, subprocess, shutil
+          import json, os, urllib.request, urllib.error, uuid, pathlib, subprocess, shutil, time
 
           token = os.environ.get("TELEGRAM_BOT_TOKEN")
           if not token:
               raise SystemExit("TELEGRAM_BOT_TOKEN secret is not configured")
 
           with open("telegram/command.json", "r", encoding="utf-8") as f:
-              cmd = json.load(f)
+              root_cmd = json.load(f)
 
-          op = cmd.get("operation")
           chat_id = "@gutsuspace"
-          allowed = {"send", "edit", "delete", "pin", "send_photo", "set_avatar", "inspect", "set_description", "set_reactions"}
-          if op not in allowed:
-              raise SystemExit(f"Unsupported operation: {op}")
+          allowed = {"send", "edit", "delete", "pin", "send_photo", "set_avatar", "inspect", "set_description", "set_reactions", "batch"}
 
           def post_json(method, payload):
               data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -57,21 +54,14 @@ jobs:
           def set_avatar():
               svg = pathlib.Path("assets/gutsu-avatar.svg")
               png = pathlib.Path("/tmp/gutsu-avatar.png")
-              converter = shutil.which("convert")
-              if converter:
-                  subprocess.run([converter, "-background", "none", str(svg), "-resize", "1024x1024", str(png)], check=True)
-              elif shutil.which("magick"):
-                  subprocess.run(["magick", str(svg), "-resize", "1024x1024", str(png)], check=True)
-              else:
+              if shutil.which("rsvg-convert") is None:
                   subprocess.run(["sudo", "apt-get", "update", "-qq"], check=True)
                   subprocess.run(["sudo", "apt-get", "install", "-y", "-qq", "librsvg2-bin"], check=True)
-                  subprocess.run(["rsvg-convert", "-w", "1024", "-h", "1024", "-o", str(png), str(svg)], check=True)
+              subprocess.run(["rsvg-convert", "-w", "1024", "-h", "1024", "-o", str(png), str(svg)], check=True)
 
               boundary = "----GUTSU" + uuid.uuid4().hex
               parts = []
-              def field(name, value):
-                  parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"{name}\"\r\n\r\n{value}\r\n".encode())
-              field("chat_id", chat_id)
+              parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode())
               parts.append(
                   f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"gutsu-avatar.png\"\r\nContent-Type: image/png\r\n\r\n".encode()
                   + png.read_bytes() + b"\r\n"
@@ -94,59 +84,72 @@ jobs:
                   raise SystemExit(f"Telegram avatar error: {result}")
               return result
 
-          if op == "set_description":
-              result = post_json("setChatDescription", {
-                  "chat_id": chat_id,
-                  "description": cmd["description"],
-              })
-          elif op == "set_reactions":
-              result = post_json("setChatAvailableReactions", {
-                  "chat_id": chat_id,
-                  "available_reactions": [
-                      {"type": "emoji", "emoji": e} for e in cmd.get("emojis", ["👍","🔥","💡"])
-                  ],
-              })
-          elif op == "inspect":
-              chat = post_json("getChat", {"chat_id": chat_id})
-              count = post_json("getChatMemberCount", {"chat_id": chat_id})
-              info = {"chat": chat.get("result", {}), "member_count": count.get("result")}
-              print(json.dumps(info, ensure_ascii=False))
-              raise SystemExit(0)
-          elif op == "set_avatar":
-              result = set_avatar()
-          elif op == "send":
-              result = post_json("sendMessage", {
-                  "chat_id": chat_id,
-                  "text": cmd["text"],
-                  "parse_mode": cmd.get("parse_mode", "HTML"),
-                  "disable_web_page_preview": bool(cmd.get("disable_web_page_preview", True)),
-              })
-          elif op == "edit":
-              result = post_json("editMessageText", {
-                  "chat_id": chat_id,
-                  "message_id": int(cmd["message_id"]),
-                  "text": cmd["text"],
-                  "parse_mode": cmd.get("parse_mode", "HTML"),
-                  "disable_web_page_preview": bool(cmd.get("disable_web_page_preview", True)),
-              })
-          elif op == "delete":
-              result = post_json("deleteMessage", {"chat_id": chat_id, "message_id": int(cmd["message_id"])})
-          elif op == "pin":
-              result = post_json("pinChatMessage", {
-                  "chat_id": chat_id,
-                  "message_id": int(cmd["message_id"]),
-                  "disable_notification": bool(cmd.get("disable_notification", True)),
-              })
-          else:
-              result = post_json("sendPhoto", {
-                  "chat_id": chat_id,
-                  "photo": cmd["photo_url"],
-                  "caption": cmd.get("caption", ""),
-                  "parse_mode": cmd.get("parse_mode", "HTML"),
-              })
+          def execute(cmd):
+              op = cmd.get("operation")
+              if op not in allowed:
+                  raise SystemExit(f"Unsupported operation: {op}")
 
-          out = {"operation": op, "ok": True}
-          if isinstance(result.get("result"), dict) and "message_id" in result["result"]:
-              out["message_id"] = result["result"]["message_id"]
-          print(json.dumps(out, ensure_ascii=False))
+              if op == "set_description":
+                  return post_json("setChatDescription", {"chat_id": chat_id, "description": cmd["description"]})
+              if op == "set_reactions":
+                  return post_json("setChatAvailableReactions", {
+                      "chat_id": chat_id,
+                      "available_reactions": [{"type": "emoji", "emoji": e} for e in cmd.get("emojis", ["👍","🔥","💡"])],
+                  })
+              if op == "inspect":
+                  chat = post_json("getChat", {"chat_id": chat_id})
+                  count = post_json("getChatMemberCount", {"chat_id": chat_id})
+                  return {"ok": True, "result": {"chat": chat.get("result", {}), "member_count": count.get("result")}}
+              if op == "set_avatar":
+                  return set_avatar()
+              if op == "send":
+                  return post_json("sendMessage", {
+                      "chat_id": chat_id,
+                      "text": cmd["text"],
+                      "parse_mode": cmd.get("parse_mode", "HTML"),
+                      "disable_web_page_preview": bool(cmd.get("disable_web_page_preview", True)),
+                  })
+              if op == "edit":
+                  return post_json("editMessageText", {
+                      "chat_id": chat_id,
+                      "message_id": int(cmd["message_id"]),
+                      "text": cmd["text"],
+                      "parse_mode": cmd.get("parse_mode", "HTML"),
+                      "disable_web_page_preview": bool(cmd.get("disable_web_page_preview", True)),
+                  })
+              if op == "delete":
+                  return post_json("deleteMessage", {"chat_id": chat_id, "message_id": int(cmd["message_id"])})
+              if op == "pin":
+                  return post_json("pinChatMessage", {
+                      "chat_id": chat_id,
+                      "message_id": int(cmd["message_id"]),
+                      "disable_notification": bool(cmd.get("disable_notification", True)),
+                  })
+              if op == "send_photo":
+                  return post_json("sendPhoto", {
+                      "chat_id": chat_id,
+                      "photo": cmd["photo_url"],
+                      "caption": cmd.get("caption", ""),
+                      "parse_mode": cmd.get("parse_mode", "HTML"),
+                  })
+              raise SystemExit("Nested batch is not supported")
+
+          if root_cmd.get("operation") == "batch":
+              results = []
+              for i, cmd in enumerate(root_cmd.get("commands", []), 1):
+                  if cmd.get("operation") == "batch":
+                      raise SystemExit("Nested batch is not supported")
+                  result = execute(cmd)
+                  item = {"index": i, "operation": cmd.get("operation"), "ok": bool(result.get("ok", True))}
+                  if isinstance(result.get("result"), dict) and "message_id" in result["result"]:
+                      item["message_id"] = result["result"]["message_id"]
+                  results.append(item)
+                  time.sleep(0.35)
+              print(json.dumps({"operation": "batch", "ok": True, "results": results}, ensure_ascii=False))
+          else:
+              result = execute(root_cmd)
+              out = {"operation": root_cmd.get("operation"), "ok": bool(result.get("ok", True))}
+              if isinstance(result.get("result"), dict) and "message_id" in result["result"]:
+                  out["message_id"] = result["result"]["message_id"]
+              print(json.dumps(out, ensure_ascii=False))
           PY
