@@ -38,12 +38,9 @@ img{max-width:100%}
   overflow:hidden;transition:opacity .58s var(--ease),visibility .58s var(--ease);
 }
 .brand-intro__mark{width:124px;height:124px;opacity:0;object-fit:contain;transition:opacity .42s ease}
-.brand-intro__signal{
-  position:absolute;width:10px;height:10px;border-radius:50%;background:var(--accent);
-  transform:translateY(90px) scale(.45);opacity:0;
-}
+.brand-intro__signal{display:none}
 body.intro-play .brand-intro__mark{opacity:1}
-body.intro-play .brand-intro__signal{animation:introSignal .92s var(--ease) both}
+body.intro-play .brand-intro__signal{display:none}
 .brand-intro.is-leaving{opacity:0;visibility:hidden}
 @keyframes introSignal{
   0%{opacity:0;transform:translateY(90px) scale(.45)}
@@ -63,6 +60,22 @@ body.intro-play .brand-intro__signal{animation:introSignal .92s var(--ease) both
 }
 
 /* Navigation / brand */
+/* Approved GUTSU logo assets */
+.asset-lockup{
+  display:inline-flex;align-items:center;gap:12px;text-decoration:none;min-width:0;
+}
+.brand-lockup-image{
+  display:block;width:260px;height:65px;object-fit:contain;flex:0 0 auto;
+}
+.asset-lockup--sub .brand-lockup-image{width:220px;height:55px}
+.nav-direction{
+  font-family:var(--brand);font-size:.68rem;font-weight:500;letter-spacing:.06em;
+  color:var(--muted);white-space:nowrap;
+}
+.brand-wordmark-image{
+  display:block;width:210px;height:52px;object-fit:contain;
+}
+
 .nav{
   min-height:82px;display:flex;justify-content:space-between;align-items:center;gap:28px;
   border-bottom:1px solid var(--line);position:relative;z-index:20;
@@ -301,6 +314,10 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .cta{align-items:flex-start;flex-direction:column}
 }
 @media(max-width:700px){
+  .brand-lockup-image{width:200px;height:50px}
+  .asset-lockup--sub .brand-lockup-image{width:170px;height:43px}
+  .nav-direction{font-size:.58rem}
+  .brand-wordmark-image{width:180px;height:45px}
   .wrap{width:min(100% - 28px,1220px)}
   .nav{min-height:70px}
   .nav-contact .mail:last-child{display:none}
@@ -310,7 +327,7 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .home-hero__meta{grid-template-columns:1fr}
   .signal-stage{margin:42px 0 72px;min-height:620px}
   .signal-stage__content{width:100%;min-height:620px;padding:26px}
-  .signal-stage__mark{right:7%;top:34%;width:min(46vw,190px);opacity:.22!important}
+  .signal-stage__mark{right:7%;top:34%;width:min(46vw,190px);opacity:1!important}
   .stage-copy h2{font-size:clamp(2.7rem,11vw,4rem)}
   .grid2,.feature-grid,.process-grid{grid-template-columns:1fr}
   .direction-card{min-height:430px;padding:24px}
@@ -337,6 +354,10 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .footer{flex-direction:column;gap:24px}
 }
 @media(max-width:480px){
+  .brand-lockup-image{width:165px;height:41px}
+  .asset-lockup--sub .brand-lockup-image{width:145px;height:36px}
+  .nav-direction{display:none}
+  .brand-wordmark-image{width:155px;height:39px}
   .brand-space{display:none}.nav-contact{gap:10px}.mail{font-size:.58rem}
   .subbrand-direction{max-width:120px;overflow:hidden;text-overflow:ellipsis}
   .display-xl{font-size:clamp(3.45rem,16vw,5rem)}
