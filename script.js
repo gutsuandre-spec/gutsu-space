@@ -74,6 +74,19 @@
     });
   }
 
+
+  // Ticker pause control. Hover/focus also pauses via CSS.
+  const ticker = document.querySelector('.ticker');
+  const tickerToggle = document.querySelector('.ticker-toggle');
+  if (ticker && tickerToggle) {
+    tickerToggle.addEventListener('click', () => {
+      const paused = ticker.classList.toggle('is-paused');
+      tickerToggle.setAttribute('aria-pressed', String(paused));
+      tickerToggle.setAttribute('aria-label', paused ? 'Продолжить бегущую строку' : 'Поставить бегущую строку на паузу');
+      tickerToggle.textContent = paused ? 'Продолжить' : 'Пауза';
+    });
+  }
+
   // Homepage direction switcher.
   const stage = document.querySelector('[data-stage]');
   const toggles = document.querySelectorAll('[data-stage-target]');
