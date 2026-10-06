@@ -1,0 +1,100 @@
+name: Telegram Channel Command
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "telegram/command.json"
+
+permissions:
+  contents: read
+
+jobs:
+  telegram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Execute Telegram command
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys, urllib.request, urllib.error
+
+          token = os.environ.get("TELEGRAM_BOT_TOKEN")
+          if not token:
+              raise SystemExit("TELEGRAM_BOT_TOKEN secret is not configured")
+
+          with open("telegram/command.json", "r", encoding="utf-8") as f:
+              cmd = json.load(f)
+
+          op = cmd.get("operation")
+          chat_id = "@gutsuspace"
+          allowed = {"send", "edit", "delete", "pin", "send_photo"}
+          if op not in allowed:
+              raise SystemExit(f"Unsupported operation: {op}")
+
+          if op == "send":
+              method = "sendMessage"
+              payload = {
+                  "chat_id": chat_id,
+                  "text": cmd["text"],
+                  "parse_mode": cmd.get("parse_mode", "HTML"),
+                  "disable_web_page_preview": bool(cmd.get("disable_web_page_preview", True)),
+              }
+          elif op == "edit":
+              method = "editMessageText"
+              payload = {
+                  "chat_id": chat_id,
+                  "message_id": int(cmd["message_id"]),
+                  "text": cmd["text"],
+                  "parse_mode": cmd.get("parse_mode", "HTML"),
+                  "disable_web_page_preview": bool(cmd.get("disable_web_page_preview", True)),
+              }
+          elif op == "delete":
+              method = "deleteMessage"
+              payload = {
+                  "chat_id": chat_id,
+                  "message_id": int(cmd["message_id"]),
+              }
+          elif op == "pin":
+              method = "pinChatMessage"
+              payload = {
+                  "chat_id": chat_id,
+                  "message_id": int(cmd["message_id"]),
+                  "disable_notification": bool(cmd.get("disable_notification", True)),
+              }
+          else:
+              method = "sendPhoto"
+              payload = {
+                  "chat_id": chat_id,
+                  "photo": cmd["photo_url"],
+                  "caption": cmd.get("caption", ""),
+                  "parse_mode": cmd.get("parse_mode", "HTML"),
+              }
+
+          data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+          req = urllib.request.Request(
+              f"https://api.telegram.org/bot{token}/{method}",
+              data=data,
+              headers={"Content-Type": "application/json"},
+              method="POST",
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=30) as resp:
+                  result = json.loads(resp.read().decode("utf-8"))
+          except urllib.error.HTTPError as e:
+              body = e.read().decode("utf-8", errors="replace")
+              raise SystemExit(f"Telegram API error {e.code}: {body}")
+
+          if not result.get("ok"):
+              raise SystemExit(f"Telegram API returned error: {result}")
+
+          out = {"operation": op, "ok": True}
+          if isinstance(result.get("result"), dict):
+              if "message_id" in result["result"]:
+                  out["message_id"] = result["result"]["message_id"]
+          print(json.dumps(out, ensure_ascii=False))
+          PY
