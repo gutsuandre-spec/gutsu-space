@@ -224,14 +224,33 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   background-size:auto,32px 32px,32px 32px;
 }
 .panel-brand-mark{position:relative;width:min(290px,62%);height:auto;object-fit:contain;filter:none;opacity:1;z-index:2}
-.data-stack{position:relative;z-index:2;width:78%;display:grid;gap:10px}
-.data-row{
-  display:grid;grid-template-columns:1.3fr .6fr .7fr;gap:12px;align-items:center;padding:14px 15px;
-  border:1px solid rgba(244,243,240,.09);border-radius:10px;background:rgba(11,13,16,.62);backdrop-filter:blur(8px);
-  font-family:var(--mono);font-size:.61rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;
+.data-stack{
+  position:relative;z-index:2;width:88%;display:grid;gap:10px;
 }
-.data-row strong{color:var(--fg);font-weight:500}.status{display:inline-flex;align-items:center;gap:7px}
-.status::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.data-row{
+  display:grid;
+  grid-template-columns:82px minmax(0,1fr) 104px;
+  column-gap:14px;
+  align-items:center;
+  min-height:82px;
+  padding:14px 18px;
+  border:1px solid rgba(244,243,240,.09);
+  border-radius:10px;
+  background:rgba(11,13,16,.62);
+  backdrop-filter:blur(8px);
+  font-family:var(--mono);
+  font-size:.61rem;
+  line-height:1.45;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.data-row strong{color:var(--fg);font-weight:500;white-space:nowrap}
+.data-row>span:not(.status){min-width:0;white-space:nowrap}
+.status{
+  display:inline-flex;align-items:center;justify-self:end;gap:7px;white-space:nowrap
+}
+.status::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);flex:0 0 6px}
 
 .section{padding:104px 0;border-top:1px solid var(--line)}
 .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:54px}
@@ -310,7 +329,7 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .signal-stage__content{padding:22px}
   .direction-card h3{font-size:2.45rem}
   .wordmark-standalone{font-size:.82rem}
-  .data-stack{width:88%}.data-row{grid-template-columns:1fr .6fr}.data-row span:nth-child(3){display:none}
+  .data-stack{width:92%}.data-row{grid-template-columns:70px minmax(0,1fr) 88px;column-gap:10px;min-height:76px;padding:12px 14px;font-size:.56rem;letter-spacing:.045em}
 }
 
 /* Reduced motion */
