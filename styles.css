@@ -136,7 +136,7 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
 [data-reveal][data-delay="3"]{transition-delay:.24s}
 
 /* Homepage hero */
-.home-hero{padding:96px 0 34px;position:relative}
+.home-hero{padding:96px 0 34px;position:relative}\n.home-hero .eyebrow{white-space:nowrap}
 .home-hero__meta{margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:18px;border-top:1px solid var(--line);padding-top:22px}
 .meta-cell{display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;letter-spacing:.08em}
 .meta-cell strong{color:var(--fg);font-weight:500}
@@ -169,7 +169,7 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
 .signal-stage[data-active="ai"] .stage-copy[data-panel="ai"]{display:block;animation:stageIn .45s var(--ease) both}
 .stage-copy h2{margin:0;font-size:clamp(2.8rem,5vw,5.2rem);line-height:.93;font-weight:590}
 .stage-copy p{max-width:520px;color:var(--muted);font-size:1.03rem}
-.stage-action{display:inline-flex;align-items:center;gap:14px;margin-top:18px;text-decoration:none;font-weight:600}
+.stage-action{display:inline-flex;align-items:center;gap:14px;min-height:44px;margin-top:18px;text-decoration:none;font-weight:600}
 .stage-action span{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);transition:.25s var(--ease)}
 .stage-action:hover span{transform:translateX(5px)}
 .signal-stage[data-active="equipment"] .stage-action:hover span{border-color:var(--accent-equipment);color:var(--accent-equipment)}
@@ -220,7 +220,7 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
 .manifesto-copy em{font-style:normal;color:var(--muted)}
 .principles{margin-top:62px;border-top:1px solid var(--line)}
 .principle{display:grid;grid-template-columns:80px 1fr 1fr;gap:26px;padding:24px 0;border-bottom:1px solid var(--line);align-items:start}
-.principle span:first-child{font-family:var(--mono);font-size:.65rem;color:var(--accent)}
+.principle span:first-child{font-family:var(--mono);font-size:.75rem;color:var(--accent)}
 .principle strong{font-family:var(--display);font-size:1.25rem;font-weight:570}
 .principle p{margin:0;color:var(--muted);font-size:.9rem}
 
