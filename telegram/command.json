@@ -1,6 +1,4 @@
 {
-  "operation": "send",
-  "parse_mode": "HTML",
-  "disable_web_page_preview": true,
-  "text": "<b>GUTSU / EQUIPMENT RADAR #01</b>\n<i>Срез по прайсу поставщика от 05.10.2026</i>\n\n10 позиций, у которых сейчас есть смысл запросить котировку — по каждой в прайсе указано наличие <b>более 5 шт.</b>:\n\n1. <b>amaran Ray 660c</b>\n2. <b>Aputure NOVA II 1x1</b>\n3. <b>Aputure NOVA II 1x1 Rolling Hard Case Kit</b>\n4. <b>Aputure CF12 Fresnel</b>\n5. <b>Aputure Spotlight Max 36° Kit</b>\n6. <b>Accsoon CineView SE</b>\n7. <b>Deity TC-1 Kit</b>\n8. <b>amaran PT4c Production Kit (2 шт.)</b>\n9. <b>NanLite PavoSlim 120C</b>\n10. <b>Sirui Aurora 85mm F1.4 FF AF E-mount</b>\n\nПубличный прайс специально не ставлю: для B2B важнее количество, комплектация и итоговая цена по конкретному запросу.\n\nЕсли закупаете что-то из списка — пришлите <b>3–10 SKU</b> на gutsuandre@gmail.com. Верну наличие, коммерческую цену и альтернативы там, где они действительно нужны.\n\nЕсли такой формат полезен — буду делать Radar регулярно.\n\n<b>@gutsuspace</b>"
+  "operation": "set_avatar",
+  "asset_version": "approved-new-master-2026-10-06-v2"
 }
