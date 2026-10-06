@@ -2,15 +2,6 @@
   "operation": "batch",
   "commands": [
     {
-      "operation": "set_reactions",
-      "emojis": [
-        "👍",
-        "🔥",
-        "💡",
-        "🤝"
-      ]
-    },
-    {
       "operation": "edit",
       "message_id": 2,
       "parse_mode": "HTML",
