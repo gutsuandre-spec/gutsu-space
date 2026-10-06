@@ -417,7 +417,9 @@ h1,h2,h3{font-family:var(--display);letter-spacing:-.045em}
   .brand-wordmark-image{width:155px;height:39px}
   .brand-space{display:none}.nav-contact{gap:4px}.mail{font-size:.8125rem}
   .subbrand-direction{max-width:120px;overflow:hidden;text-overflow:ellipsis}
-  .display-xl{font-size:clamp(3.45rem,16vw,5rem)}
+  .home-hero .kicker-row{flex-direction:column;align-items:flex-start;gap:8px}
+  .display-xl{font-size:clamp(2.8rem,12.5vw,3.35rem);line-height:.93}
+  .display-xl .muted-word{display:block;font-size:.88em;line-height:1.02}
   .signal-stage__content{padding:22px}
   .direction-card h3{font-size:2.45rem}
   .wordmark-standalone{font-size:.82rem}
