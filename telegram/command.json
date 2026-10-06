@@ -1,5 +1,3 @@
 {
-  "operation": "pin",
-  "message_id": 2,
-  "disable_notification": true
+  "operation": "set_avatar"
 }
