@@ -1,0 +1,42 @@
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI-аудит бизнес-процессов: что автоматизировать первым — GUTSU</title>
+<meta name="description" content="Практический гайд: как выбрать первый бизнес-процесс для AI-автоматизации, оценить эффект, собрать пилот и не автоматизировать хаос.">
+<link rel="canonical" href="https://gutsu.space/ai/audit/">
+<meta property="og:type" content="article"><meta property="og:site_name" content="GUTSU"><meta property="og:title" content="AI-аудит бизнес-процессов: что автоматизировать первым"><meta property="og:description" content="Как найти процесс для AI-пилота с измеримым эффектом."><meta property="og:url" content="https://gutsu.space/ai/audit/">
+<meta name="twitter:card" content="summary"><meta name="theme-color" content="#0B0D10">
+<link rel="icon" type="image/svg+xml" href="../../assets/gutsu-mark-site.svg"><link rel="stylesheet" href="../../styles.css">
+<script type="application/ld+json" id="gutsu-schema">{"@context":"https://schema.org","@type":"Article","headline":"AI-аудит бизнес-процессов: что автоматизировать первым","datePublished":"2026-10-06","dateModified":"2026-10-06","author":{"@type":"Person","name":"Андрей Гуцу"},"publisher":{"@type":"Organization","name":"GUTSU"},"mainEntityOfPage":"https://gutsu.space/ai/audit/","inLanguage":"ru-RU"}</script>
+</head><body><main class="wrap">
+<nav class="nav"><a class="subbrand-lockup" href="../../"><img class="brand-mark" src="../../assets/gutsu-mark-site.svg" alt=""><span class="subbrand-copy"><strong class="subbrand-title">GUTSU</strong><em class="subbrand-direction">/ AI</em></span></a><div class="nav-contact"><a class="mail" href="../">AI</a><a class="mail" href="https://t.me/gutsuspace" target="_blank" rel="noopener">@gutsuspace</a></div></nav>
+<header class="article-hero"><p class="eyebrow">GUTSU / GUIDE 02</p><h1>AI-аудит: как выбрать процесс, который действительно стоит автоматизировать.</h1><p class="lead">Не начинайте с выбора модели или платформы. Сначала найдите повторяемый процесс, где понятны вход, результат, цена ошибки и стоимость ручной работы.</p><div class="article-meta"><span>Андрей Гуцу</span><span>6 октября 2026</span><span>7–9 минут</span></div></header>
+<article class="article">
+<nav class="article-toc"><span class="eyebrow">СОДЕРЖАНИЕ</span><a href="#candidate">01 / Кандидат</a><a href="#measure">02 / Эффект</a><a href="#ai">03 / Где нужен AI</a><a href="#pilot">04 / Пилот</a><a href="#control">05 / Контроль</a><a href="#brief">06 / Бриф</a></nav>
+<div class="article-body">
+<h2 id="candidate">1. Ищите не «AI-задачу», а дорогую повторяемость.</h2>
+<p>Хороший кандидат на автоматизацию возникает там, где люди много раз выполняют похожие действия: разбирают входящие письма, переносят данные, готовят однотипные документы, сверяют статусы, собирают отчёты или ищут информацию по внутренним материалам.</p>
+<p><strong>Чем стабильнее вход и понятнее желаемый выход, тем быстрее можно проверить экономику.</strong> Если сам процесс каждый раз меняется и никто не может описать правила, сначала стоит привести в порядок процесс — и только потом добавлять автоматизацию.</p>
+
+<h2 id="measure">2. До пилота определите, что будет считаться эффектом.</h2>
+<p>Необязательно начинать с сложного ROI. Для первого этапа достаточно 2–3 метрик: минут на одну операцию, количество операций в месяц, доля ошибок, время ответа клиенту, число ручных касаний или стоимость работы сотрудника.</p>
+<div class="article-callout">Пример: если менеджер тратит 12 минут на первичный разбор заявки, а заявок 400 в месяц, процесс потребляет около 80 часов. Это уже измеримая база для пилота.</div>
+
+<h2 id="ai">3. AI нужен только там, где жёстких правил недостаточно.</h2>
+<p>Проверку ИНН по формату, арифметику, маршрутизацию по фиксированному полю или перенос данных между API лучше делать обычным кодом и правилами. AI полезен, когда системе нужно <strong>понимать свободный текст, извлекать смысл, классифицировать неоднозначные данные или подготовить черновик</strong>.</p>
+<p>Сильная архитектура часто гибридная: правила контролируют критичные действия, а модель работает там, где нужна интерпретация.</p>
+
+<h2 id="pilot">4. Пилот должен проверять один риск.</h2>
+<p>Не пытайтесь сразу автоматизировать весь отдел. Выберите узкий сценарий: например, входящее письмо → извлечённые реквизиты → черновик карточки в CRM. Если этот участок стабильно работает, следующий шаг становится очевидным.</p>
+<p>Пилот должен быть достаточно маленьким, чтобы его можно было выбросить без боли, и достаточно реальным, чтобы он работал на настоящих данных.</p>
+
+<h2 id="control">5. Продакшн начинается с исключений и контроля.</h2>
+<p>После красивого демо появляются вопросы, которые и отличают рабочую систему: что делать при низкой уверенности модели, кто подтверждает важное действие, где хранится лог, как откатить ошибку, какие данные нельзя отправлять во внешнюю модель.</p>
+<p>Поэтому процесс проектируется как связка <strong>AI + правила + человек в контрольной точке</strong>, а не как автономный бот любой ценой.</p>
+
+<h2 id="brief">6. Что прислать для первого разбора.</h2>
+<ul><li>что сейчас происходит по шагам;</li><li>кто делает работу вручную;</li><li>пример входных данных;</li><li>какой результат нужен на выходе;</li><li>примерный объём операций в неделю или месяц;</li><li>какая ошибка считается критичной.</li></ul>
+<div class="article-callout">Двух-трёх абзацев обычно достаточно. Если процесс нельзя описать коротко, это уже полезный сигнал для аудита.</div>
+<div class="article-links"><a class="article-link" href="../"><span>GUTSU / AI</span><strong>Обсудить автоматизацию →</strong></a><a class="article-link" href="https://t.me/gutsuspace" target="_blank" rel="noopener"><span>TELEGRAM</span><strong>Практические AI-разборы →</strong></a></div>
+</div></article>
+<footer class="footer"><div class="footer-brand"><div class="wordmark-standalone"><strong>GUTSU</strong><i class="signal-dot"></i><span>SPACE</span></div><span>/ GUIDE</span></div><div><a href="../../">gutsu.space</a><br>Equipment / AI</div></footer>
+</main><script src="../../script.js"></script></body></html>
