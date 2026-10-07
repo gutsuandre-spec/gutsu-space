@@ -3,19 +3,11 @@
   "commands": [
     {
       "operation": "create_invite",
-      "name": "gutsu-dm"
+      "name": "gutsu-site"
     },
     {
       "operation": "create_invite",
-      "name": "gutsu-chats"
-    },
-    {
-      "operation": "create_invite",
-      "name": "gutsu-swap"
-    },
-    {
-      "operation": "create_invite",
-      "name": "gutsu-site-mail"
+      "name": "gutsu-mail"
     }
   ]
 }
