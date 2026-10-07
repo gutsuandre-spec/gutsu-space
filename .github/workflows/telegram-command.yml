@@ -31,7 +31,7 @@ jobs:
               root_cmd = json.load(f)
 
           chat_id = "@gutsuspace"
-          allowed = {"send", "edit", "delete", "pin", "send_photo", "set_avatar", "inspect", "set_description", "set_reactions", "batch"}
+          allowed = {"send", "edit", "delete", "pin", "send_photo", "set_avatar", "inspect", "set_title", "set_description", "set_reactions", "batch"}
 
           def post_json(method, payload):
               data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -89,6 +89,8 @@ jobs:
               if op not in allowed:
                   raise SystemExit(f"Unsupported operation: {op}")
 
+              if op == "set_title":
+                  return post_json("setChatTitle", {"chat_id": chat_id, "title": cmd["title"]})
               if op == "set_description":
                   return post_json("setChatDescription", {"chat_id": chat_id, "description": cmd["description"]})
               if op == "set_reactions":
