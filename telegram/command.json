@@ -1,4 +1,21 @@
 {
-  "operation": "inspect",
-  "context": "post-packaging-audit-2026-10-07"
+  "operation": "batch",
+  "commands": [
+    {
+      "operation": "create_invite",
+      "name": "gutsu-dm"
+    },
+    {
+      "operation": "create_invite",
+      "name": "gutsu-chats"
+    },
+    {
+      "operation": "create_invite",
+      "name": "gutsu-swap"
+    },
+    {
+      "operation": "create_invite",
+      "name": "gutsu-site-mail"
+    }
+  ]
 }
