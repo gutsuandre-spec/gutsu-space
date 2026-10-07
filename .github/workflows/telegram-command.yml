@@ -31,7 +31,7 @@ jobs:
               root_cmd = json.load(f)
 
           chat_id = "@gutsuspace"
-          allowed = {"send", "edit", "delete", "pin", "send_photo", "set_avatar", "inspect", "set_title", "set_description", "set_reactions", "batch"}
+          allowed = {"send", "edit", "delete", "pin", "send_photo", "set_avatar", "inspect", "set_title", "set_description", "set_reactions", "create_invite", "batch"}
 
           def post_json(method, payload):
               data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -102,6 +102,12 @@ jobs:
                   chat = post_json("getChat", {"chat_id": chat_id})
                   count = post_json("getChatMemberCount", {"chat_id": chat_id})
                   return {"ok": True, "result": {"chat": chat.get("result", {}), "member_count": count.get("result")}}
+              if op == "create_invite":
+                  return post_json("createChatInviteLink", {
+                      "chat_id": chat_id,
+                      "name": cmd["name"],
+                      "creates_join_request": bool(cmd.get("creates_join_request", False)),
+                  })
               if op == "set_avatar":
                   return set_avatar()
               if op == "send":
@@ -143,15 +149,21 @@ jobs:
                       raise SystemExit("Nested batch is not supported")
                   result = execute(cmd)
                   item = {"index": i, "operation": cmd.get("operation"), "ok": bool(result.get("ok", True))}
-                  if isinstance(result.get("result"), dict) and "message_id" in result["result"]:
-                      item["message_id"] = result["result"]["message_id"]
+                  if isinstance(result.get("result"), dict):
+                      if "message_id" in result["result"]:
+                          item["message_id"] = result["result"]["message_id"]
+                      if "invite_link" in result["result"]:
+                          item["invite_link"] = result["result"]["invite_link"]
                   results.append(item)
                   time.sleep(0.35)
               print(json.dumps({"operation": "batch", "ok": True, "results": results}, ensure_ascii=False))
           else:
               result = execute(root_cmd)
               out = {"operation": root_cmd.get("operation"), "ok": bool(result.get("ok", True))}
-              if isinstance(result.get("result"), dict) and "message_id" in result["result"]:
-                  out["message_id"] = result["result"]["message_id"]
+              if isinstance(result.get("result"), dict):
+                  if "message_id" in result["result"]:
+                      out["message_id"] = result["result"]["message_id"]
+                  if "invite_link" in result["result"]:
+                      out["invite_link"] = result["result"]["invite_link"]
               print(json.dumps(out, ensure_ascii=False))
           PY
