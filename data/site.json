@@ -1,0 +1,21 @@
+{
+  "origin": "https://gutsu.space",
+  "email": "gutsuandre@gmail.com",
+  "telegram": "https://t.me/gutsuspace",
+  "operator_name": "Индивидуальный предприниматель Гуцу Андрей Леонидович",
+  "inn": "770974968843",
+  "ogrnip": "326774600752451",
+  "privacy_contact_address": null,
+  "privacy_approved_at": null,
+  "consent_approved_at": null,
+  "privacy_version": "2026-10-28-draft",
+  "retention_months": 12,
+  "api_origin": null,
+  "public_intake_enabled": false,
+  "storage_location_confirmed_ru": false,
+  "catalog_publication_approved": true,
+  "backend_deployment_approved": false,
+  "attachment_scanner_approved": false,
+  "backup_retention_policy_approved": false,
+  "privacy_documents_final": false
+}

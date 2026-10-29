@@ -17,3 +17,7 @@ Supported command.json operations:
 - send_photo
 
 The command file is changed only when a channel action is requested.
+
+## Client data boundary
+
+`lead-tracker.csv` is a legacy empty header, not a place to store contacts or live requests. The repository is public. Store real leads, correspondence, attachments and prices only in the private Radar state outside Git. The security check rejects populated tracker rows; Pages publishes only the explicit `dist` bundle and never this directory. Do not put credentials into command files: keep the existing GitHub Secret mechanism.

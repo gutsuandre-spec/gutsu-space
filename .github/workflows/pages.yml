@@ -19,10 +19,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate public build
+        run: |
+          python3 tools/security_audit.py --history
+          python3 -m unittest discover -s tools -p "test_*.py"
+          python3 tools/build_site.py --release --static-catalog
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Inspect Pages HTTPS state
         env:
@@ -32,7 +37,7 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "dist"
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

@@ -1,10 +1,17 @@
-name: Homepage Quality
+name: Static Catalogue Quality
 
 on:
   pull_request:
     branches: ["main"]
     paths:
       - "index.html"
+      - "equipment/**"
+      - "ai/**"
+      - "privacy/**"
+      - "consent/**"
+      - "tools/**"
+      - "data/**"
+      - ".github/workflows/pages.yml"
       - "styles.css"
       - "script.js"
       - "assets/**"
@@ -26,9 +33,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Tests and safe public build
+        run: |
+          python3 -m unittest discover -s tools -p "test_*.py"
+          python3 tools/security_audit.py
+          python3 tools/build_site.py --static-catalog
       - name: Start static server
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/gutsu-server.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory dist > /tmp/gutsu-server.log 2>&1 &
           echo $! > /tmp/gutsu-server.pid
           sleep 2
           curl --fail --silent http://127.0.0.1:4173/ > /dev/null

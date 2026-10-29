@@ -1,0 +1,26 @@
+__pycache__/
+*.pyc
+.venv/
+dist/
+qa-screens/
+.lighthouseci/
+*.sqlite3
+*.sqlite3-*
+.env
+.env.*
+private/
+
+# Real supplier data, evidence and client material must stay outside this repository.
+*.xlsx
+*.xls
+*.pdf
+*.pem
+*.key
+*.internal.json
+*.draft.json
+radar-state/
+qualifications/
+commercial/
+backups/
+*.csv
+*.tsv
