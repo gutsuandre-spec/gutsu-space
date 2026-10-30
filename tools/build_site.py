@@ -4,7 +4,7 @@ from html import escape as h
 import json
 from pathlib import Path
 import shutil
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import urlencode, urlsplit, quote
 import xml.etree.ElementTree as ET
 from catalog_public import BRANDS,CATEGORIES,validate,ROOT,category_for
 
@@ -12,6 +12,8 @@ ORIGIN='https://gutsu.space'
 
 def page(path,title,description,body,*,robots=None,api_origin=None):
     canonical=ORIGIN+path
+    brand=next((b[0] for b in BRANDS if path=='/equipment/brands/'+b[0]+'/'),None)
+    request_url='/equipment/request/'+('?'+urlencode({'brand':brand}) if brand else '')
     crumbs=[{'@type':'ListItem','position':1,'name':'GUTSU','item':ORIGIN+'/'},
             {'@type':'ListItem','position':2,'name':'Equipment','item':ORIGIN+'/equipment/'},
             {'@type':'ListItem','position':3,'name':title,'item':canonical}]
@@ -29,25 +31,43 @@ def page(path,title,description,body,*,robots=None,api_origin=None):
 <script type="application/ld+json">{json.dumps(schema,ensure_ascii=False).replace('<','&lt;')}</script></head>
 <body class="is-ready"><a class="skip-link" href="#main-content">Перейти к содержанию</a>
 <div class="wrap"><header><nav class="nav"><a class="asset-lockup asset-lockup--sub" href="/" aria-label="GUTSU SPACE"><img class="brand-lockup-image" src="/assets/gutsu-lockup-horizontal.svg" alt="GUTSU SPACE" width="220" height="55"></a>
-<div class="nav-contact"><a class="mail" href="/equipment/">Equipment</a><a class="mail" href="/equipment/brands/">Бренды</a><a class="mail" href="/equipment/request/">Запросить КП</a></div></nav></header>
+<div class="nav-contact"><a class="mail" href="/equipment/">Equipment</a><a class="mail" href="/equipment/brands/">Бренды</a><a class="mail" href="{request_url}">Запросить КП</a></div></nav></header>
 <main id="main-content" tabindex="-1">{body}</main>
-<footer class="footer"><div class="footer-brand"><img class="brand-wordmark-image" src="/assets/gutsu-wordmark.svg" alt="GUTSU SPACE" width="180" height="45"><span>/ EQUIPMENT</span></div><div><a href="/equipment/brands/">Каталог брендов</a> · <a href="/equipment/request/">Запросить КП</a><br><a href="https://t.me/gutsuspace" rel="noopener" target="_blank">Telegram</a> · <a href="/privacy/">Персональные данные</a></div></footer></div>
+<footer class="footer"><div class="footer-brand"><img class="brand-wordmark-image" src="/assets/gutsu-wordmark.svg" alt="GUTSU SPACE" width="180" height="45"><span>/ EQUIPMENT</span></div><div><a href="/equipment/brands/">Каталог брендов</a> · <a href="{request_url}">Запросить КП</a><br><a href="https://t.me/gutsuspace" rel="noopener" target="_blank">Telegram</a> · <a href="/privacy/">Персональные данные</a></div></footer></div>
 <script src="/equipment/catalog.js" defer></script></body></html>'''
 
 def hero(kicker,title,lead):
     return f'<section class="catalog-hero"><p class="eyebrow">{h(kicker)}</p><h1>{title}</h1><p class="lead">{lead}</p></section>'
 
-def static_request():
+def quote_text(brand=''):
+    return ('Здравствуйте! Прошу подготовить коммерческое предложение.\n\n'
+            +(f'Бренд: {brand}\n' if brand else '')
+            +'Модель / список оборудования:\nКоличество:\nГород поставки:\nЖелаемый срок:\nТребования к комплекту:')
+
+def static_request(brand='',products=None):
+    text=quote_text(brand)
+    mail='mailto:gutsuandre@gmail.com?'+urlencode({'subject':'Запрос КП GUTSU'+(' — '+brand if brand else ''),'body':text},quote_via=quote)
+    catalogue=''
+    if products is not None:
+        names={b[0]:b[1] for b in BRANDS}
+        data={'brands':names,'products':[{'code':p['id'],'model':p['name'],'brand':p['brand']} for p in products]}
+        catalogue='<script type="application/json" id="request-catalog">'+json.dumps(data,ensure_ascii=False).replace('<','\\u003c')+'</script>'
     return ('<section class="request-section" id="request"><div><p class="eyebrow">ПОД ЗАКАЗ / B2B</p>'
-            '<h2>Обсудить оборудование</h2><p>Проверим выбранные модели, количество и условия поставки перед подготовкой предложения.</p></div>'
-            '<div class="lead-form"><p class="form-status">Форма приёма заявок пока недоступна. Отправка контактных данных и файлов через форму отключена.</p>'
-            '<p>Для обсуждения задачи можно использовать существующие контакты GUTSU.</p>'
-            '<div class="catalog-actions"><a class="btn" href="https://t.me/gutsuspace" target="_blank" rel="noopener">Открыть Telegram ↗</a>'
-            '<a class="micro-link" href="mailto:gutsuandre@gmail.com">Написать email →</a></div>'
-            '<p class="form-alternative">Цена, наличие и срок поставки требуют отдельного подтверждения.</p></div></section>')
+            '<h2>Запросить КП по email</h2><p>Проверим выбранные модели, комплектность и условия поставки. Добавьте в письмо количество, город и желаемый срок.</p></div>'
+            f'<div class="lead-form quote-contact" data-quote-contact data-brand="{h(brand,quote=True)}">'
+            '<p data-quote-selection>Можно прислать готовый список или описать задачу для подбора.</p>'
+            '<p>Почта GUTSU: <a class="quote-address" href="mailto:gutsuandre@gmail.com">gutsuandre@gmail.com</a></p>'
+            f'<div class="catalog-actions"><a class="btn" data-quote-email href="{h(mail,quote=True)}">Открыть письмо ↗</a>'
+            '<button class="micro-link quote-copy" type="button" data-quote-copy hidden>Скопировать текст</button></div>'
+            '<p class="form-alternative">Откроется ваша почтовая программа. Если она не настроена, скопируйте текст ниже и отправьте его из своей почты.</p>'
+            f'<pre class="quote-message" data-quote-message tabindex="0" aria-label="Текст запроса КП">{h(text)}</pre>'
+            '<p class="quote-status" data-quote-status role="status" aria-live="polite"></p>'
+            '<p class="form-alternative">Письмо отправляете вы. Эта страница не отправляет запрос и не принимает контактные данные или вложения. Цена, наличие и срок поставки требуют подтверждения.</p>'
+            '<noscript><p>Для автоматической подстановки выбранной модели нужен JavaScript. Можно скопировать её название из каталога и написать на указанный email.</p></noscript>'
+            '</div>'+catalogue+'</section>')
 
 def form(model='',static_catalog=False):
-    if static_catalog: return static_request()
+    if static_catalog: return static_request(model)
     return f'''<section class="request-section" id="request"><div><p class="eyebrow">ПОД ЗАКАЗ / B2B</p><h2>Запросить коммерческое предложение</h2><p>Проверим выбранные модели, количество и условия поставки. Цена и наличие — по запросу.</p><p>Сначала согласуем комплект, договор и условия предоплаты, затем закупку и поставку.</p></div>
 <form class="lead-form" data-lead-form novalidate><p class="form-status" role="status" aria-live="polite">Проверяем доступность формы…</p>
 <fieldset disabled><legend>Данные для ответа на запрос</legend>
@@ -66,7 +86,7 @@ def form(model='',static_catalog=False):
 def products_table(items):
     lines=[]
     for p in items:
-        query=urlencode({'model':p['name'],'code':p['id']})
+        query=urlencode({'brand':p['brand'],'model':p['name'],'code':p['id']})
         lines.append(f'<tr><td><strong>{h(p["name"])}</strong><small>Код позиции {h(p["id"])} · {h(p["category"])}</small></td><td>Цена и наличие — по запросу</td><td><a href="/equipment/request/?{query}">Запросить КП <span aria-hidden="true">↗</span></a></td></tr>')
     return '<div class="table-scroll"><table class="product-table"><caption>Модели для подбора. Код позиции не является артикулом производителя.</caption><thead><tr><th>Оборудование</th><th>Условия</th><th>Запрос</th></tr></thead><tbody>'+''.join(lines)+'</tbody></table></div>'
 
@@ -99,7 +119,7 @@ def generate(root=ROOT,static_catalog=False):
         items=[p for p in products if category_for(p)==slug]; ids={p['brand'] for p in items}; brands=[b for b in BRANDS if b[0] in ids]
         body=hero('EQUIPMENT / КАТЕГОРИИ',h(title),h(desc))+'<div class="category-chips">'+''.join(f'<a href="/equipment/brands/{b[0]}/">{h(b[1])}</a>' for b in brands)+'</div>'+products_table(items)+form(static_catalog=static_catalog)
         write('/equipment/categories/'+slug+'/',title+' под заказ',desc,body)
-    write('/equipment/request/','Запросить КП или подбор оборудования','Пришлите модели, количество или задачу. Подбор и поставка профессионального оборудования под заказ для бизнеса.',hero('EQUIPMENT / ЗАПРОС','От задачи — к комплекту.','Укажите оборудование или опишите задачу. Цену, комплектность и условия поставки согласуем до закупки.')+form(static_catalog=static_catalog))
+    write('/equipment/request/','Запросить КП или подбор оборудования','Пришлите модели, количество или задачу. Подбор и поставка профессионального оборудования под заказ для бизнеса.',hero('EQUIPMENT / ЗАПРОС','От задачи — к комплекту.','Укажите оборудование или опишите задачу. Цену, комплектность и условия поставки согласуем до закупки.')+(static_request(products=products) if static_catalog else form()))
     if static_catalog:
         note=('<article class="policy-copy"><p>Форма приёма заявок на этом сайте не активирована. '
               'Сайт не принимает контактные данные и вложения через форму.</p>'
@@ -162,8 +182,6 @@ def bundle(root=ROOT,out=None,release=False,static_catalog=False):
     out.mkdir()
     for f in files:
         target=out/f.relative_to(root); target.parent.mkdir(parents=True,exist_ok=True); shutil.copyfile(f,target)
-    if static_catalog:
-        (out/'equipment/catalog.js').write_text('// Static catalogue release. Forms, API requests and personal data collection are disabled.\n')
     if len(list(p for p in out.rglob('*') if p.is_file()))!=45:
         raise ValueError('public_manifest_must_contain_45_files')
     return out

@@ -4,7 +4,7 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
-from urllib.parse import urljoin,urlsplit,unquote
+from urllib.parse import urljoin,urlsplit,unquote,parse_qs
 import xml.etree.ElementTree as ET
 from build_site import ROOT,BRANDS,generate,bundle
 from test_site import HTML
@@ -63,5 +63,38 @@ class StaticReleaseTests(unittest.TestCase):
         import urllib.robotparser
         parser=urllib.robotparser.RobotFileParser();parser.parse((self.out/'robots.txt').read_text().splitlines())
         for b in BRANDS:self.assertTrue(parser.can_fetch('*','https://gutsu.space/equipment/brands/'+b[0]+'/'))
+    def test_every_model_link_preserves_public_identity(self):
+        products=json.loads((self.root/'data/equipment-public.json').read_text())
+        for p in products:
+            tags=HTML((self.out/'equipment/brands'/p['brand']/'index.html').read_text()).tags
+            links=[parse_qs(urlsplit(a.get('href','')).query) for t,a in tags if t=='a']
+            self.assertIn({'brand':[p['brand']],'model':[p['name']],'code':[p['id']]},links)
+    def test_lookup_contains_only_reviewed_public_fields(self):
+        import re
+        text=(self.out/'equipment/request/index.html').read_text()
+        lookup=json.loads(re.search(r'<script type="application/json" id="request-catalog">(.*?)</script>',text).group(1))
+        self.assertEqual(len(lookup['products']),80)
+        for p in lookup['products']:self.assertEqual(set(p),{'code','model','brand'})
+        self.assertEqual(set(lookup['brands']),{b[0] for b in BRANDS})
+    def test_mailto_works_without_script_and_keeps_brand(self):
+        for b in BRANDS:
+            tags=HTML((self.out/'equipment/brands'/b[0]/'index.html').read_text()).tags
+            link=next(a['href'] for t,a in tags if 'data-quote-email' in a)
+            url=urlsplit(link);self.assertEqual(url.scheme,'mailto');self.assertEqual(url.path,'gutsuandre@gmail.com')
+            self.assertIn('Бренд: '+b[1],parse_qs(url.query)['body'][0])
+            self.assertNotIn('+',url.query)
+            self.assertTrue(any(a.get('href')=='/equipment/request/?brand='+b[0] for t,a in tags))
+    def test_static_script_is_kept_and_has_no_network_or_persistence(self):
+        script=(self.out/'equipment/catalog.js').read_text()
+        self.assertEqual(script,(self.root/'equipment/catalog.js').read_text())
+        self.assertIn('data-quote-email',script)
+        for forbidden in ['fetch(', 'XMLHttpRequest', 'sendBeacon', 'localStorage', 'sessionStorage', 'innerHTML', '/api/']:
+            self.assertNotIn(forbidden,script)
+    def test_operational_reports_never_enter_public_bundle(self):
+        for name in ['gmail-history.internal.json','monitor.internal.json','github-jobs.json','deploy.log']:
+            p=self.root/name;p.write_text('PRIVATE TEST')
+        out=bundle(self.root,static_catalog=True)
+        for name in ['gmail-history.internal.json','monitor.internal.json','github-jobs.json','deploy.log']:
+            self.assertFalse((out/name).exists())
 
 if __name__=='__main__':unittest.main()
